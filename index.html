@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treeva Cafe - Digital Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- QRCode Library for Client-side QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #121110;
+      --bg-card: #1c1a17;
+      --bg-card-hover: #26231f;
+      --accent-gold: #d4af37;
+      --accent-warm: #e67e22;
+      --accent-light: #f5e6d3;
+      --text-main: #f8f6f0;
+      --text-muted: #a69f95;
+      --border-color: rgba(212, 175, 55, 0.18);
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    /* Header Section */
+    .header {
+      background: linear-gradient(180deg, rgba(18, 17, 16, 0.9) 0%, rgba(28, 26, 23, 0.98) 100%),
+                  radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 60%);
+      padding: 40px 20px 25px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo {
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .brand-tagline {
+      font-size: 0.95rem;
+      color: var(--accent-light);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .cafe-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px 25px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-item i {
+      color: var(--accent-gold);
+    }
+
+    .info-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .info-item a:hover {
+      color: var(--accent-gold);
+    }
+
+    /* Sticky Controls Bar */
+    .sticky-controls {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(18, 17, 16, 0.94);
+      backdrop-filter: blur(14px);
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .controls-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 18px 12px 45px;
+      border-radius: 30px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-gold);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: var(--accent-gold);
+      color: var(--bg-dark);
+      font-weight: 600;
+      border-color: var(--accent-gold);
+      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Action Buttons Banner */
+    .owner-toolbar {
+      max-width: 1000px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tool-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--accent-gold);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Menu Container */
+    .menu-container {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 0 20px;
+    }
+
+    .category-section {
+      margin-bottom: 40px;
+    }
+
+    .category-header {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .category-header span {
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* Item Card */
+    .menu-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .item-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .star-badge {
+      color: #ffd700;
+      font-size: 0.9rem;
+    }
+
+    .price-list {
+      display: flex;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .price-pill {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 10px;
+      padding: 6px 12px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .price-size {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .price-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    /* Add-ons Section */
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .addon-card {
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .addon-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .addon-price {
+      color: var(--accent-gold);
+      font-weight: 700;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #1c1a17;
+      border: 1px solid var(--accent-gold);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: var(--accent-gold);
+    }
+
+    .qr-preview-box {
+      background: white;
+      padding: 15px;
+      border-radius: 14px;
+      display: inline-block;
+      margin: 20px 0;
+    }
+
+    .qr-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .qr-input-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .qr-input-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 40px;
+      padding: 25px 20px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand-logo">
+      <i class="fa-solid fa-tree"></i> Treeva Cafe
+    </div>
+    <div class="brand-tagline">Coffee • Pastry • Smoothie</div>
+    <div class="cafe-info">
+      <div class="info-item">
+        <i class="fa-solid fa-clock"></i>
+        <span>Weekdays: 8:00 AM - 1:00 AM | Weekends: 8:00 AM - 3:00 AM</span>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>6 OF OCTOBER Hay Alashgar-Commercial Center, Giza, Egypt</span>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-phone"></i>
+        <a href="tel:01037060458">01037060458</a>
+      </div>
+      <div class="info-item">
+        <i class="fa-brands fa-instagram"></i>
+        <a href="https://instagram.com/Treevacafe" target="_blank">@Treevacafe</a>
+      </div>
+      <div class="info-item">
+        <i class="fa-brands fa-facebook"></i>
+        <a href="https://facebook.com/Treevacafe" target="_blank">Treevacafe</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Owner Quick Tools Toolbar -->
+  <div class="owner-toolbar">
+    <button class="tool-btn" onclick="openQrModal()">
+      <i class="fa-solid fa-qrcode"></i> Customize / Download QR
+    </button>
+    <a href="printable-table-stand.html" target="_blank" class="tool-btn">
+      <i class="fa-solid fa-print"></i> Print Table Stand (Hard Copy)
+    </a>
+  </div>
+
+  <!-- Sticky Search & Category Navigation -->
+  <div class="sticky-controls">
+    <div class="controls-wrapper">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search menu items (e.g. Mocha, Mojito, Matcha)..." oninput="filterMenu()">
+      </div>
+      <div class="categories-bar">
+        <button class="cat-btn active" onclick="filterCategory('all', this)">All Items</button>
+        <button class="cat-btn" onclick="filterCategory('iced-coffee', this)">Iced Coffee</button>
+        <button class="cat-btn" onclick="filterCategory('frappes', this)">Frappes</button>
+        <button class="cat-btn" onclick="filterCategory('hot-coffee', this)">Hot Coffee</button>
+        <button class="cat-btn" onclick="filterCategory('mojitos', this)">Mojitos</button>
+        <button class="cat-btn" onclick="filterCategory('smoothies', this)">Smoothies</button>
+        <button class="cat-btn" onclick="filterCategory('fresh-juices', this)">Fresh Juices</button>
+        <button class="cat-btn" onclick="filterCategory('milkshake', this)">Milkshake</button>
+        <button class="cat-btn" onclick="filterCategory('matcha', this)">Matcha Lover</button>
+        <button class="cat-btn" onclick="filterCategory('add-ons', this)">Add-ons</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Display -->
+  <div class="menu-container" id="menuContent">
+    
+    <!-- ICED COFFEE -->
+    <section class="category-section" data-category="iced-coffee">
+      <div class="category-header">
+        ICED COFFEE
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="caramel macchiato">
+          <div class="card-top"><div class="item-title">Caramel Macchiato</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="mocha">
+          <div class="card-top"><div class="item-title">Mocha <i class="fa-solid fa-star star-badge" title="Popular"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="white mocha">
+          <div class="card-top"><div class="item-title">White Mocha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="americano">
+          <div class="card-top"><div class="item-title">Americano</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="pistachio hazelnut">
+          <div class="card-top"><div class="item-title">Pistachio Hazelnut</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">130 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">150 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="spanish latte">
+          <div class="card-top"><div class="item-title">Spanish Latte <i class="fa-solid fa-star star-badge" title="Popular"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="latte">
+          <div class="card-top"><div class="item-title">Latte</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRAPPES -->
+    <section class="category-section" data-category="frappes">
+      <div class="category-header">
+        FRAPPES
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="dark mocha">
+          <div class="card-top"><div class="item-title">Dark Mocha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">120 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">140 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="salted caramel">
+          <div class="card-top"><div class="item-title">Salted Caramel</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="classic frappe">
+          <div class="card-top"><div class="item-title">Classic</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="white mocha frappe">
+          <div class="card-top"><div class="item-title">White Mocha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">120 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">140 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="pistachio hazelnut frappe">
+          <div class="card-top"><div class="item-title">Pistachio Hazelnut <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">140 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">160 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="caramel frappe">
+          <div class="card-top"><div class="item-title">Caramel <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOT COFFEE -->
+    <section class="category-section" data-category="hot-coffee">
+      <div class="category-header">HOT COFFEE</div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="espresso">
+          <div class="card-top"><div class="item-title">Espresso <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Single</div><div class="price-val">70 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="turkish coffee">
+          <div class="card-top"><div class="item-title">Turkish Coffee</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Single</div><div class="price-val">40 LE</div></div>
+            <div class="price-pill"><div class="price-size">Double</div><div class="price-val">60 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="hot mocha">
+          <div class="card-top"><div class="item-title">Hot Mocha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="hot spanish latte">
+          <div class="card-top"><div class="item-title">Spanish Latte</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="hot americano">
+          <div class="card-top"><div class="item-title">Americano</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="cappuccino">
+          <div class="card-top"><div class="item-title">Cappuccino <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="macchiato">
+          <div class="card-top"><div class="item-title">Macchiato</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="hot latte">
+          <div class="card-top"><div class="item-title">Latte</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="flat white">
+          <div class="card-top"><div class="item-title">Flat White</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="cortado">
+          <div class="card-top"><div class="item-title">Cortado</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOJITOS -->
+    <section class="category-section" data-category="mojitos">
+      <div class="category-header">
+        MOJITOS
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="classic mojito">
+          <div class="card-top"><div class="item-title">Classic</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="passion fruit mojito">
+          <div class="card-top"><div class="item-title">Passion Fruit <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="redbull mojito">
+          <div class="card-top"><div class="item-title">Redbull</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">120 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">140 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="raspberry mojito">
+          <div class="card-top"><div class="item-title">Raspberry</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="peach mojito">
+          <div class="card-top"><div class="item-title">Peach</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="blue curacao mojito">
+          <div class="card-top"><div class="item-title">Blue Curacao <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="blueberry mojito">
+          <div class="card-top"><div class="item-title">Blueberry</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SMOOTHIES -->
+    <section class="category-section" data-category="smoothies">
+      <div class="category-header">
+        SMOOTHIES
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="peach smoothie">
+          <div class="card-top"><div class="item-title">Peach</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="blueberry smoothie">
+          <div class="card-top"><div class="item-title">Blueberry</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="lemon mint smoothie">
+          <div class="card-top"><div class="item-title">Lemon Mint</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="watermelon smoothie">
+          <div class="card-top"><div class="item-title">Watermelon <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="tom and jerry smoothie">
+          <div class="card-top"><div class="item-title">Tom & Jerry <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">130 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">150 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="mango smoothie">
+          <div class="card-top"><div class="item-title">Mango <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="mixed berry smoothie">
+          <div class="card-top"><div class="item-title">Mixed Berry</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">90 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">110 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRESH JUICES -->
+    <section class="category-section" data-category="fresh-juices">
+      <div class="category-header">
+        FRESH JUICES
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="strawberry juice">
+          <div class="card-top"><div class="item-title">Strawberry</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">70 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">90 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="mango juice">
+          <div class="card-top"><div class="item-title">Mango</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">70 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">90 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="lemon mint juice">
+          <div class="card-top"><div class="item-title">Lemon Mint</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">70 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">90 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="florida juice">
+          <div class="card-top"><div class="item-title">Florida</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="banana with milk">
+          <div class="card-top"><div class="item-title">Banana With Milk</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="guava with milk">
+          <div class="card-top"><div class="item-title">Guava With Milk</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="watermelon juice">
+          <div class="card-top"><div class="item-title">Watermelon <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">80 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">100 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="orange juice">
+          <div class="card-top"><div class="item-title">Orange <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">60 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">80 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MILKSHAKE -->
+    <section class="category-section" data-category="milkshake">
+      <div class="category-header">
+        MILKSHAKE
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="chocolate milkshake">
+          <div class="card-top"><div class="item-title">Chocolate</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">130 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">150 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="fruit milkshake">
+          <div class="card-top"><div class="item-title">Fruit</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">110 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">130 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="vanilla milkshake">
+          <div class="card-top"><div class="item-title">Vanilla <i class="fa-solid fa-star star-badge"></i></div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">120 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHA LOVER -->
+    <section class="category-section" data-category="matcha">
+      <div class="category-header">
+        MATCHA LOVER
+        <span>R: Regular | L: Large</span>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" data-name="matcha latte">
+          <div class="card-top"><div class="item-title">Matcha Latte</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">120 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">140 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="strawberry matcha">
+          <div class="card-top"><div class="item-title">Strawberry Matcha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">130 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">150 LE</div></div>
+          </div>
+        </div>
+
+        <div class="menu-card" data-name="spanish matcha">
+          <div class="card-top"><div class="item-title">Spanish Matcha</div></div>
+          <div class="price-list">
+            <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">140 LE</div></div>
+            <div class="price-pill"><div class="price-size">Large</div><div class="price-val">160 LE</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD-ONS -->
+    <section class="category-section" data-category="add-ons">
+      <div class="category-header">ADD-ONS</div>
+      <div class="addons-grid">
+        <div class="addon-card" data-name="extra shot">
+          <div class="addon-name">Extra Shot</div>
+          <div class="addon-price">50 LE</div>
+        </div>
+        <div class="addon-card" data-name="flavour">
+          <div class="addon-name">Flavour</div>
+          <div class="addon-price">20 LE</div>
+        </div>
+        <div class="addon-card" data-name="ice & lemon">
+          <div class="addon-name">Ice & Lemon</div>
+          <div class="addon-price">20 LE</div>
+        </div>
+        <div class="addon-card" data-name="non dairy milk">
+          <div class="addon-name">Non-Dairy Milk</div>
+          <div class="addon-price">50 LE</div>
+        </div>
+        <div class="addon-card" data-name="whipped cream">
+          <div class="addon-name">Whipped Cream</div>
+          <div class="addon-price">20 LE</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- QR Code Customizer Modal -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeQrModal()">&times;</button>
+      <h3 style="color: var(--accent-gold); font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 10px;">
+        <i class="fa-solid fa-qrcode"></i> Cafe QR Code Generator
+      </h3>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 15px;">
+        Enter your hosted website link to update the live QR Code.
+      </p>
+
+      <div class="qr-input-group">
+        <label for="targetUrl">Target Menu URL:</label>
+        <input type="text" id="targetUrl" value="https://treevacafe.netlify.app" oninput="updateLiveQr()">
+      </div>
+
+      <div class="qr-preview-box">
+        <div id="qrcode"></div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+        <button class="tool-btn" onclick="downloadQrCode()" style="background: var(--accent-gold); color: var(--bg-dark);">
+          <i class="fa-solid fa-download"></i> Download QR Image
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 Treeva Cafe. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let qrcodeObj = null;
+
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const sections = document.querySelectorAll('.category-section');
+      sections.forEach(sec => {
+        if (cat === 'all' || sec.dataset.category === cat) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    function filterMenu() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.menu-card, .addon-card');
+      
+      cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        if (name.includes(query)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (query !== '') {
+        document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
+      }
+    }
+
+    function openQrModal() {
+      document.getElementById('qrModal').style.display = 'flex';
+      updateLiveQr();
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').style.display = 'none';
+    }
+
+    function updateLiveQr() {
+      const url = document.getElementById('targetUrl').value || window.location.href;
+      const container = document.getElementById('qrcode');
+      container.innerHTML = '';
+      qrcodeObj = new QRCode(container, {
+        text: url,
+        width: 180,
+        height: 180,
+        colorDark: "#1c1a17",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function downloadQrCode() {
+      const img = document.querySelector('#qrcode img');
+      if (img) {
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = 'Treeva_Cafe_QR.png';
+        a.click();
+      }
+    }
+  </script>
+</body>
+</html>

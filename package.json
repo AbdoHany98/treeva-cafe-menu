@@ -1,0 +1,12 @@
+{
+  "name": "treeva-cafe-menu",
+  "version": "1.0.0",
+  "description": "Digital Web Menu & QR Code Generator for Treeva Cafe",
+  "main": "index.html",
+  "scripts": {
+    "generate-qr": "node generate-qr.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

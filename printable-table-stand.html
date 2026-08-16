@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treeva Cafe - Table Stand QR Poster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg: #121110;
+      --card-bg: #1c1a17;
+      --gold: #d4af37;
+      --text: #f8f6f0;
+      --muted: #a69f95;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0a09;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Print Card Canvas (Target: 4x6" or A5 ratio) */
+    .table-stand-card {
+      width: 420px;
+      background: linear-gradient(180deg, #1c1a17 0%, #121110 100%);
+      border: 3px solid var(--gold);
+      border-radius: 24px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      color: var(--gold);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .brand-sub {
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #e67e22;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    .scan-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .scan-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .qr-frame {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 3px solid var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .cafe-hours {
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      padding-top: 15px;
+      margin-top: 10px;
+    }
+
+    .cafe-hours i {
+      color: var(--gold);
+      margin-right: 4px;
+    }
+
+    .table-number-box {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .no-print-bar {
+      margin-top: 25px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-print {
+      padding: 12px 24px;
+      border-radius: 30px;
+      background: var(--gold);
+      color: #121110;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-print:hover {
+      opacity: 0.9;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .table-stand-card {
+        border-color: #000 !important;
+        box-shadow: none !important;
+        background: white !important;
+        color: black !important;
+      }
+      .brand-title, .scan-title, .brand-sub {
+        color: black !important;
+      }
+      .cafe-hours {
+        color: #333 !important;
+        border-top-color: #ccc !important;
+      }
+      .table-number-box {
+        border-color: #000 !important;
+        color: #000 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Physical Table Stand Card -->
+  <div class="table-stand-card">
+    <div class="table-number-box">TABLE #</div>
+    <div class="brand-title">
+      <i class="fa-solid fa-tree"></i> Treeva Cafe
+    </div>
+    <div class="brand-sub">Coffee • Pastry • Smoothie</div>
+
+    <div class="scan-title"><i class="fa-solid fa-mobile-screen"></i> Scan For Digital Menu</div>
+    <div class="scan-sub">Point your phone camera to view prices & items</div>
+
+    <div class="qr-frame">
+      <div id="qrcode"></div>
+    </div>
+
+    <div class="cafe-hours">
+      <div><i class="fa-solid fa-clock"></i> Weekdays: 8 AM - 1 AM | Weekends: 8 AM - 3 AM</div>
+      <div style="margin-top: 4px;"><i class="fa-solid fa-location-dot"></i> 6th of October Hay Alashgar, Giza</div>
+    </div>
+  </div>
+
+  <!-- Print Actions -->
+  <div class="no-print-bar">
+    <button class="btn-print" onclick="window.print()">
+      <i class="fa-solid fa-print"></i> Print Stand Poster (Hard Copy)
+    </button>
+  </div>
+
+  <script>
+    // Generate high resolution QR code inside stand
+    const targetUrl = window.location.origin ? (window.location.origin + '/index.html') : 'https://treevacafe.netlify.app';
+    new QRCode(document.getElementById("qrcode"), {
+      text: targetUrl,
+      width: 200,
+      height: 200,
+      colorDark: "#121110",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
