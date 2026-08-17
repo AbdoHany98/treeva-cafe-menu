@@ -11,11 +11,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
-      --bg: #121110;
-      --card-bg: #1c1a17;
-      --gold: #d4af37;
-      --text: #f8f6f0;
-      --muted: #a69f95;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --accent: #000000;
+      --text: #000000;
+      --muted: #555555;
+      --border: #000000;
     }
 
     * {
@@ -25,7 +26,7 @@
     }
 
     body {
-      background-color: #0b0a09;
+      background-color: #f0f0f0;
       color: var(--text);
       font-family: 'Outfit', sans-serif;
       display: flex;
@@ -39,40 +40,29 @@
     /* Print Card Canvas (Target: 4x6" or A5 ratio) */
     .table-stand-card {
       width: 420px;
-      background: linear-gradient(180deg, #1c1a17 0%, #121110 100%);
-      border: 3px solid var(--gold);
-      border-radius: 24px;
-      padding: 40px 30px;
+      background: var(--card-bg);
+      border: 3px solid var(--border);
+      border-radius: 28px;
+      padding: 35px 30px;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
       position: relative;
     }
 
-    .brand-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.6rem;
-      color: var(--gold);
-      margin-bottom: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .brand-sub {
-      font-size: 0.85rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #e67e22;
-      margin-bottom: 25px;
-      font-weight: 600;
+    .brand-logo-img {
+      max-width: 190px;
+      height: auto;
+      margin: 0 auto 12px;
+      display: block;
+      mix-blend-mode: multiply;
+      clip-path: inset(2px);
     }
 
     .scan-title {
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
       color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -80,29 +70,30 @@
     .scan-sub {
       font-size: 0.85rem;
       color: var(--muted);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .qr-frame {
       background: white;
-      padding: 16px;
-      border-radius: 16px;
+      padding: 14px;
+      border-radius: 20px;
       display: inline-block;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border: 3px solid var(--gold);
-      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 2px solid #000000;
+      margin-bottom: 18px;
     }
 
     .cafe-hours {
       font-size: 0.82rem;
       color: var(--muted);
-      border-top: 1px solid rgba(212, 175, 55, 0.2);
-      padding-top: 15px;
-      margin-top: 10px;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 14px;
+      margin-top: 5px;
+      line-height: 1.5;
     }
 
     .cafe-hours i {
-      color: var(--gold);
+      color: #000000;
       margin-right: 4px;
     }
 
@@ -110,12 +101,13 @@
       position: absolute;
       top: 18px;
       right: 20px;
-      border: 1px solid var(--gold);
+      border: 2px solid #000000;
       border-radius: 8px;
       padding: 4px 10px;
       font-size: 0.75rem;
-      color: var(--gold);
-      font-weight: 700;
+      color: #000000;
+      font-weight: 800;
+      letter-spacing: 0.5px;
     }
 
     .no-print-bar {
@@ -125,22 +117,24 @@
     }
 
     .btn-print {
-      padding: 12px 24px;
+      padding: 12px 28px;
       border-radius: 30px;
-      background: var(--gold);
-      color: #121110;
+      background: #000000;
+      color: #ffffff;
       font-weight: 700;
       border: none;
       cursor: pointer;
       font-size: 0.95rem;
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       display: flex;
       align-items: center;
       gap: 8px;
+      transition: all 0.2s ease;
     }
 
     .btn-print:hover {
-      opacity: 0.9;
+      background: #222222;
+      transform: translateY(-2px);
     }
 
     /* Print Styles */
@@ -158,8 +152,11 @@
         box-shadow: none !important;
         background: white !important;
         color: black !important;
+        width: 100% !important;
+        max-width: 420px;
+        margin: 0 auto;
       }
-      .brand-title, .scan-title, .brand-sub {
+      .scan-title {
         color: black !important;
       }
       .cafe-hours {
@@ -177,10 +174,7 @@
 
   <!-- Physical Table Stand Card -->
   <div class="table-stand-card">
-    <div class="table-number-box">TABLE #</div>
-    <div class="brand-title">
-      <i class="fa-solid fa-tree"></i> Treeva Cafe
-    </div>
+    <img src="logo.jpg" alt="Treeva Cafe Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='logo.png';">
 
     <div class="scan-title"><i class="fa-solid fa-mobile-screen"></i> Scan For Digital Menu</div>
     <div class="scan-sub">Point your phone camera to view prices & items</div>
@@ -209,7 +203,7 @@
       text: targetUrl,
       width: 200,
       height: 200,
-      colorDark: "#121110",
+      colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
     });

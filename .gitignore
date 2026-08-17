@@ -2,7 +2,6 @@ node_modules/
 .DS_Store
 *.log
 .env
-
-# QR Codes
+generate-qr.js
 treeva_cafe_qr.png
 treeva_cafe_qr.svg
