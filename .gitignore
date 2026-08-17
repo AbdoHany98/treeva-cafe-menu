@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 *.log
 .env
+
+# QR Codes
+treeva_cafe_qr.png
+treeva_cafe_qr.svg
