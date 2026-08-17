@@ -61,6 +61,7 @@
       height: auto;
       display: block;
       mix-blend-mode: multiply;
+      clip-path: inset(2px); /* Crops out the faint gray border baked into the image file */
     }
 
     .brand-tagline {
@@ -268,6 +269,15 @@
     .menu-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow);
+    }
+
+    .item-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      background: var(--bg-page); /* placeholder color */
     }
 
     .card-top {
@@ -498,6 +508,8 @@
       </div>
       <div class="items-grid">
         <div class="menu-card" data-name="caramel macchiato">
+          <!-- FUTURE IMAGE SUPPORT: Simply uncomment the line below and change the src to your image name! -->
+          <!-- <img src="your-drink-image.jpg" class="item-image" alt="Drink Image"> -->
           <div class="card-top"><div class="item-title">Caramel Macchiato</div></div>
           <div class="price-list">
             <div class="price-pill"><div class="price-size">Regular</div><div class="price-val">100 LE</div></div>
